@@ -14,34 +14,18 @@ const Note = () => {
   };
 
   const handleSave = () => {
-    const firstLine = content.replace(/<[^>]+>/g, "").trim().split('\n')[0];
-    // const lines = content.split("\n");
-    // const plainText = content[0].replace(/<p[^>]*>/g, "").trim();
-    // const lines = plainText.split('\n')
-    // const firstLine = lines[0].trim();
-    // const lines = [];
-    // const content = document.getElementById('content').value;
-    //     content.split('\n').forEach((line) => {
-    //         lines.push(line)
-    //   })
-    // const lines = content.split("\n");
-    // const noteName = lines.length > 0 ? lines[0] : "Untitled";
-    // const noteName = lines[0].replace(/<[^>]*>/g, "");
-    // const noteName = lines[0].replace(/<[^>]*>/g, "").replace(/\n/g, "").trim()
-    const noteName = firstLine;
-    // const noteName =
-    //   firstLine.indexOf("\n") !== -1 ? firstLine.split("\n")[0] : firstLine;
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(content, 'text/html')
+    const firstLine = doc.querySelector('body > *')
+
+    let noteName = ""
+    if(firstLine) {
+      noteName = firstLine.textContent.trim()
+    }
 
     const newNote = { name: noteName, content: content };
     const updatedNotes = [...notes, newNote];
     setNotes(updatedNotes);
-
-    // const range = document.createRange();
-    // range.setStart(content.firstChild, 0);
-    // range.setEnd(content, content.indexOf('\n'))
-    // content.focus()
-    // content.selectionStart = range.startOffset
-    // content.selectionEnd = range.endOffset
 
     localStorage.setItem("notes", JSON.stringify(updatedNotes));
     alert("Note saved successfully!");
