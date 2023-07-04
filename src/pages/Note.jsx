@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Footer from "../components/Footer";
 import Nav from "../components/Nav";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -7,28 +6,40 @@ import "react-quill/dist/quill.snow.css";
 const Note = () => {
   const [content, setContent] = useState("");
   const [notes, setNotes] = useState([]);
+  const [editingIndex, setEditingIndex] = useState(-1);
 
   const handleChange = (value) => {
-    // const plainText = value.replace(/\n/g, "").trim();
     setContent(value);
   };
 
   const handleSave = () => {
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(content, 'text/html')
-    const firstLine = doc.querySelector('body > *')
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, "text/html");
+    const firstLine = doc.querySelector("body > *");
 
-    let noteName = ""
-    if(firstLine) {
-      noteName = firstLine.textContent.trim()
+    let noteName = "";
+    if (firstLine) {
+      noteName = firstLine.textContent.trim();
     }
 
     const newNote = { name: noteName, content: content };
-    const updatedNotes = [...notes, newNote];
-    setNotes(updatedNotes);
 
-    localStorage.setItem("notes", JSON.stringify(updatedNotes));
-    alert("Note saved successfully!");
+    const existingNoteIndex = notes.findIndex((note) => note.name === noteName);
+
+    if (existingNoteIndex !== -1) {
+      // If the note already exists, update it
+      const updatedNotes = [...notes];
+      updatedNotes[existingNoteIndex] = newNote;
+      setNotes(updatedNotes);
+      localStorage.setItem("notes", JSON.stringify(updatedNotes));
+      alert("Note saved successfully!");
+    } else {
+      // If note doesn't exist, add it to the notes array
+      const updatedNotes = [...notes, newNote];
+      setNotes(updatedNotes);
+      localStorage.setItem("notes", JSON.stringify(updatedNotes));
+      alert("Note saved successfully!");
+    }
   };
 
   const handleDelete = (index) => {
@@ -38,6 +49,12 @@ const Note = () => {
 
     localStorage.setItem("notes", JSON.stringify(updatedNotes));
     alert("Note deleted successfully!");
+  };
+
+  const handleEdit = (index) => {
+    const note = notes[index];
+    setContent(note.content);
+    setEditingIndex(index);
   };
 
   useEffect(() => {
@@ -56,19 +73,38 @@ const Note = () => {
         <div className="w-2/6 px-10">
           <ul>
             {notes.map((note, index) => (
-              <li key={index}>
+              <li className="my-4" key={index}>
                 {note.name}
-                <button onClick={() => handleDelete(index)}>Delete</button>
+                <div className="flex justify-between gap-5 w-full">
+                  <button
+                    className="text-sm text-white px-2 bg-theme py-1 rounded-md"
+                    onClick={() => handleEdit(index)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="text-sm text-white px-2 bg-red-600 py-1 rounded-md"
+                    onClick={() => handleDelete(index)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
         </div>
         <div className="w-4/6">
-          <ReactQuill theme="snow" value={content} onChange={handleChange} />
-          <button onClick={() => handleSave()}>Save MY note</button>
+          <ReactQuill
+            theme="snow"
+            value={content}
+            onChange={handleChange}
+            editing={{
+              value: editingIndex !== -1,
+            }}
+          />
+          <button onClick={() => handleSave()}>Save My Note</button>
         </div>
       </div>
-      <Footer />
     </>
   );
 };
