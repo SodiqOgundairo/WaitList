@@ -1,5 +1,5 @@
 update features 
 
-You could add a search bar to the list of notes so that users can easily find the notes they are looking for.
 You could add a way for users to add tags to their notes so that they can organize them more easily.
+
 You could add a way for users to share their notes with others.

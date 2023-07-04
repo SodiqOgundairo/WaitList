@@ -70,6 +70,26 @@ const Note = () => {
     }
   }, []);
 
+  const handleShareNote = (noteIndex) => {
+    const note = notes[noteIndex];
+    const shareLink = window.location.origin + "/notes/" + note.id;
+    const shareModal = document.getElementById("share-modal");
+    shareModal.style.display = "block";
+    const shareLinkInput = document.getElementById("share-link");
+    shareLinkInput.value = shareLink;
+  };
+
+  const shareModal = document.getElementById("share-modal");
+const shareLinkInput = document.getElementById("share-link");
+
+const handleCloseShareModal = () => {
+  shareModal.style.display = "none";
+};
+
+const handleShowShareModal = () => {
+  shareModal.style.display = "block";
+};
+
   return (
     <>
       <Nav />
@@ -100,6 +120,12 @@ const Note = () => {
                   >
                     Delete
                   </button>
+                  <button
+                        className="text-sm text-white px-2 bg-blue-500 py-1 rounded-md"
+                        onClick={() => handleShareNote(index)}
+                      >
+                        Share
+                      </button>
                 </div>
               </li>
             ))}
@@ -115,6 +141,30 @@ const Note = () => {
             }}
           />
           <button onClick={() => handleSave()}>Save My Note</button>
+        </div>
+        <div
+          className="modal"
+          id="share-modal"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            zIndex: 1000,
+            display: "none",
+          }}
+        >
+          <div className="modal-content">
+            <h2>Share Note</h2>
+            <input
+              type="text"
+              id="share-link"
+              value=""
+              placeholder="Your share link"
+            />
+            <button onClick={handleCloseShareModal}>Close</button>
+          </div>
         </div>
       </div>
     </>
