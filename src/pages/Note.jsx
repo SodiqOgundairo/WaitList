@@ -7,6 +7,7 @@ const Note = () => {
   const [content, setContent] = useState("");
   const [notes, setNotes] = useState([]);
   const [editingIndex, setEditingIndex] = useState(-1);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleChange = (value) => {
     setContent(value);
@@ -57,6 +58,10 @@ const Note = () => {
     setEditingIndex(index);
   };
 
+  const filteredNotes = notes.filter((note) => 
+    note.name.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+  );
+
   useEffect(() => {
     const storedNotes = localStorage.getItem("notes");
     if (storedNotes) {
@@ -71,8 +76,15 @@ const Note = () => {
       <h1 className="p-5 text-2xl text-theme font-extrabold">My Notes</h1>
       <div className="flex justify-between m-5">
         <div className="w-2/6 px-10">
+          <input
+            type="text"
+            placeholder="Search notes"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
           <ul>
-            {notes.map((note, index) => (
+          {filteredNotes.map((note, index) => (
+            // {notes.map((note, index) => (
               <li className="my-4" key={index}>
                 {note.name}
                 <div className="flex justify-between gap-5 w-full">
