@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 const Footer = () => {
         // const [currentDate, setCurrentDate] = useState(new Date());
       

@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import Nav from "../components/Nav";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import {
+  AiOutlineDelete,
+  AiOutlineEdit,
+  AiOutlineSave,
+  AiOutlineShareAlt,
+} from "react-icons/ai";
 
 const Note = () => {
   const [content, setContent] = useState("");
@@ -58,7 +64,7 @@ const Note = () => {
     setEditingIndex(index);
   };
 
-  const filteredNotes = notes.filter((note) => 
+  const filteredNotes = notes.filter((note) =>
     note.name.toLowerCase().includes(searchQuery.toLocaleLowerCase())
   );
 
@@ -80,21 +86,21 @@ const Note = () => {
   };
 
   const shareModal = document.getElementById("share-modal");
-const shareLinkInput = document.getElementById("share-link");
+  const shareLinkInput = document.getElementById("share-link");
 
-const handleCloseShareModal = () => {
-  shareModal.style.display = "none";
-};
+  const handleCloseShareModal = () => {
+    shareModal.style.display = "none";
+  };
 
-const handleShowShareModal = () => {
-  shareModal.style.display = "block";
-};
+  const handleShowShareModal = () => {
+    shareModal.style.display = "block";
+  };
 
   return (
     <>
       <Nav />
       <h1 className="p-5 text-2xl text-theme font-extrabold">My Notes</h1>
-      <div className="flex justify-between m-5">
+      <div className="md:flex gap-2 justify-between m-5">
         <div className="w-2/6 px-10">
           <input
             type="text"
@@ -103,29 +109,29 @@ const handleShowShareModal = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <ul>
-          {filteredNotes.map((note, index) => (
-            // {notes.map((note, index) => (
-              <li className="my-4" key={index}>
-                {note.name}
-                <div className="flex justify-between gap-5 w-full">
+            {filteredNotes.map((note, index) => (
+              // {notes.map((note, index) => (
+              <li className="my-4 flex justify-between" key={index}>
+                <div className="w-[80%]">{note.name}</div>
+                <div className="flex justify-between gap-1 w-[20%]">
                   <button
-                    className="text-sm text-white px-2 bg-theme py-1 rounded-md"
+                    className="text-sm text-white px-2 bg-theme py-2 h-fit rounded-md"
                     onClick={() => handleEdit(index)}
                   >
-                    Edit
+                    <AiOutlineEdit />
                   </button>
                   <button
-                    className="text-sm text-white px-2 bg-red-600 py-1 rounded-md"
+                    className=" text-lg text-white px-2 bg-red-600 py-2 h-fit rounded-md"
                     onClick={() => handleDelete(index)}
                   >
-                    Delete
+                    <AiOutlineDelete />
                   </button>
-                  <button
-                        className="text-sm text-white px-2 bg-blue-500 py-1 rounded-md"
-                        onClick={() => handleShareNote(index)}
-                      >
-                        Share
-                      </button>
+                  {/* <button
+                    className="text-sm text-white px-2 bg-blue-500 py-2 h-fit rounded-md"
+                    onClick={() => handleShareNote(index)}
+                  >
+                    <AiOutlineShareAlt />
+                  </button> */}
                 </div>
               </li>
             ))}
@@ -140,20 +146,16 @@ const handleShowShareModal = () => {
               value: editingIndex !== -1,
             }}
           />
-          <button onClick={() => handleSave()}>Save My Note</button>
+          <div className="mr-auto">
+            <button className="mr-auto" onClick={() => handleSave()}>
+              {" "}
+              <AiOutlineSave className="inline text-lg" /> Save My Note
+            </button>
+          </div>
         </div>
         <div
-          className="modal"
+          className="modal absolute top-[50%] left-[50%] w-fit h-fit z-50 hidden bg-theme text-white p-[50px]"
           id="share-modal"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            zIndex: 1000,
-            display: "none",
-          }}
         >
           <div className="modal-content">
             <h2>Share Note</h2>
